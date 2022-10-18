@@ -1,17 +1,17 @@
 package com.example.agendapersonas
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
-import com.example.agendapersonas.databinding.ActivityMainBinding
+import android.view.View
+import androidx.core.os.bundleOf
+import androidx.fragment.app.Fragment
 
-class MainActivity : AppCompatActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        val binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+import com.example.agendapersonas.databinding.FragmentMainBinding
+
+class MainFragment : Fragment(R.layout.fragment_main) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view,savedInstanceState)
+        val binding = FragmentMainBinding.bind(view)
         binding.recycler.adapter=PersonaAdapter(
             listOf(
             Persona("Juan", "656640331","https://loremflickr.com/320/240/random","nandito@gmail.com"),
@@ -23,14 +23,18 @@ class MainActivity : AppCompatActivity() {
                     Persona("Nieves", "000033444","https://loremflickr.com/320/240/random","nansup@gmail.com"),
             Persona("Martin", "999993444","https://loremflickr.com/320/240/random","neeoo@gmail.com"),
             Persona("paco", "999993444","https://loremflickr.com/320/240/random","nunuo@gmail.com")
-        ), { persona ->
-            val intent = Intent(this@MainActivity, Personadetail::class.java)
-                intent.putExtra(Personadetail.EXTRA_PERSONA, persona)
-                startActivity(intent)
+        )
+        ) { persona ->
 
+                val fragment = DetailFragment()
+                parentFragmentManager
+                    .beginTransaction()
+                    .replace(R.id.container_view, fragment)
+                    .commit()
 
+                     fragment.arguments = bundleOf(DetailFragment.EXTRA_PERSONA to persona)
 
-            })
+        }
 
 
     }
